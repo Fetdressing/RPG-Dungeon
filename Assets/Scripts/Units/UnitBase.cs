@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(UnitUIDisplay))]
 public class UnitBase : MonoBehaviour
 {
     public static List<UnitBase> allActiveUnits = new List<UnitBase>();
+
+    public UnitUIDisplay unitUIDisplay;
 
     private bool isInit = false;
 
@@ -19,11 +22,12 @@ public class UnitBase : MonoBehaviour
     private void Attack()
     {
         int damage = weapon.GetDamageRoll();
-        print(damage);
+        currTarget.UnitBase.unitUIDisplay.DisplayHitText(damage.ToString());
     }
 
     private void Awake()
     {
+        unitUIDisplay = this.GetComponent<UnitUIDisplay>();
         Init();
     }
 
@@ -117,6 +121,14 @@ public class UnitBase : MonoBehaviour
             get
             {
                 return target.transform.position;
+            }
+        }
+
+        public UnitBase UnitBase
+        {
+            get
+            {
+                return target;
             }
         }
 
