@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(UnitUIDisplay))]
+[RequireComponent(typeof(Health))]
 public class UnitBase : MonoBehaviour
 {
     public static List<UnitBase> allActiveUnits = new List<UnitBase>();
 
-    public UnitUIDisplay unitUIDisplay;
+
 
     private bool isInit = false;
+
+    public Health health;
 
     public WeaponBase weapon;
 
@@ -19,15 +21,21 @@ public class UnitBase : MonoBehaviour
 
     private Target currTarget;
 
+
+
+    public void Die()
+    {
+        allActiveUnits.Remove(this);
+    }
+
     private void Attack()
     {
         int damage = weapon.GetDamageRoll();
-        currTarget.UnitBase.unitUIDisplay.DisplayHitText(damage.ToString());
+        currTarget.UnitBase.health.Attack(damage);
     }
 
     private void Awake()
     {
-        unitUIDisplay = this.GetComponent<UnitUIDisplay>();
         Init();
     }
 
@@ -40,6 +48,8 @@ public class UnitBase : MonoBehaviour
 
         isInit = true;
 
+        health.SetMaxHealth(100);
+
         FetchTargets();
     }
 
@@ -50,7 +60,7 @@ public class UnitBase : MonoBehaviour
             return;
         }
 
-        if (currTarget != null)
+        if (currTarget != null && currTarget.Alive)
         {
             if (Time.time > nextAttackReady)
             {
@@ -78,6 +88,11 @@ public class UnitBase : MonoBehaviour
 
         for (int i = 0; i < allPotTargets.Count; i++)
         {
+            if (allPotTargets[i] == null || allPotTargets[i].Alive == false)
+            {
+                continue;
+            }
+
             allPotTargets[i].CalculateThreat();
 
             if (allPotTargets[i].threat > biggestThreat)
@@ -85,6 +100,11 @@ public class UnitBase : MonoBehaviour
                 biggestThreat = allPotTargets[i].threat;
                 bestIndex = i;
             }
+        }
+
+        if (bestIndex < 0)
+        {
+            return null;
         }
 
         return allPotTargets[bestIndex];
@@ -96,8 +116,19 @@ public class UnitBase : MonoBehaviour
 
         for (int i = 0; i < allActiveUnits.Count; i++)
         {
+            // Make sure we are not adding ourselves to targets.
+            if (allActiveUnits[i] == this)
+            {
+                continue;
+            }
+
             allPotTargets.Add(new Target(allActiveUnits[i], this));
         }
+    }
+
+    private void OnValidate()
+    {
+        health = this.GetComponent<Health>();
     }
 
     private class Target
@@ -114,6 +145,14 @@ public class UnitBase : MonoBehaviour
             this.target = target;
             this.owner = owner;
 
+        }
+
+        public bool Alive
+        {
+            get
+            {
+                return target != null;
+            }
         }
 
         public Vector3 Position

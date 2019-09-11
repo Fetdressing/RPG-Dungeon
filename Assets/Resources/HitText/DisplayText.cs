@@ -30,7 +30,8 @@ public class DisplayText : MonoBehaviour
     private IEnumerator DisplayHitTextIE()
     {
         float displayTime = 2f;
-        float speed = 10;
+        const float startSpeed = 10;
+        float speed = startSpeed;
 
         float accumTime = 0f;
 
@@ -39,7 +40,7 @@ public class DisplayText : MonoBehaviour
             float norReductionVal = 1 - (accumTime / displayTime);
 
             this.transform.position = this.transform.position + new Vector3(0, Time.deltaTime * speed, 0);
-            speed = System.Math.Max(speed * norReductionVal, 0.05f);
+            speed = System.Math.Max(speed * norReductionVal, startSpeed * 0.1f);
             textComp.color = new Color(1, 1, 1, norReductionVal);
 
             accumTime += Time.deltaTime;
