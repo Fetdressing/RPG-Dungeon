@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(Canvas))]
-public class UnitUIDisplay : MonoBehaviour
+public class UnitUIDisplay : UnitChild
 {
     private static DisplayText textNormalPrefab;
 
@@ -19,6 +19,13 @@ public class UnitUIDisplay : MonoBehaviour
 
     private static Transform lookCameraTransform;
     private Vector3 vecToCamera;
+
+    public override void OnDeath(UnitBase killer)
+    {
+        base.OnDeath(killer);
+
+        displayer.gameObject.SetActive(false);
+    }
 
     public void DisplayHitText(string hitText, int fontSize)
     {
@@ -42,11 +49,18 @@ public class UnitUIDisplay : MonoBehaviour
 
     public void SetHealth(float normalizedAmount)
     {
+        if (!alive)
+        {
+            return;
+        }
+
         healthBar.fillAmount = normalizedAmount;
     }
 
-    private void Awake()
+    protected override void OnInit()
     {
+        base.OnInit();
+
         if (lookCameraTransform == null)
         {
             lookCameraTransform = Camera.main.transform;

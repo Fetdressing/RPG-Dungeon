@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(UnitUIDisplay))]
-public class Health : MonoBehaviour
+[RequireComponent(typeof(UnitEffects))]
+public class Health : UnitChild
 {
     [HideInInspector]
     public UnitBase unitBase;
 
     [HideInInspector]
     public UnitUIDisplay unitUIDisplay;
+
+    [HideInInspector]
+    public UnitEffects unitEffects;
 
     private int maxHealth;
 
@@ -21,7 +25,7 @@ public class Health : MonoBehaviour
         this.currHealth = maxHealth;
     }
 
-    public void Attack(int damage)
+    public void Attack(int damage, UnitBase attacker)
     {
         // Calculate whether it missed or not.
 
@@ -30,8 +34,9 @@ public class Health : MonoBehaviour
         int minMaxFontDiff = maxDamageFontSize - minDamageFontSize;
 
         const int deathFontSize = 8;
+        float damageSize = ((float)damage / maxHealth); // How big the damage was for this unit.
 
-        int fontSize = minDamageFontSize + ((int)(((float)damage / maxHealth) * minMaxFontDiff));
+        int fontSize = minDamageFontSize + ((int)(damageSize * minMaxFontDiff));
 
         currHealth = System.Math.Max(0, currHealth - damage);
 
@@ -40,23 +45,27 @@ public class Health : MonoBehaviour
         if (currHealth <= 0)
         {
             unitUIDisplay.DisplayHitText("<color=red><b>DEAD</b></color>", deathFontSize);
-            Die();
+            Die(attacker);
         }
         else
         {
             unitUIDisplay.DisplayHitText(damage.ToString(), fontSize);
+            unitEffects.DisplayHit((this.transform.position - attacker.transform.position).normalized, damageSize);
         }
     }
 
-    private void Die()
+    private void Die(UnitBase killer)
     {
-        unitBase.Die();
-        Destroy(this.gameObject);
+        unitBase.SignalDeath(killer);
+        Destroy(this.gameObject, 2f);
     }
 
-    private void OnValidate()
+    protected override void EditorOnValidate()
     {
+        base.EditorOnValidate();
+
         unitBase = this.GetComponent<UnitBase>();
         unitUIDisplay = this.GetComponent<UnitUIDisplay>();
+        unitEffects = this.GetComponent<UnitEffects>();
     }
 }
