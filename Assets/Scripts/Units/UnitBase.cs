@@ -6,7 +6,8 @@ using UnityEngine;
 public class UnitBase : UnitRoot
 {
     public static List<UnitBase> allActiveUnits = new List<UnitBase>();
-    
+
+    public Collider[] colliders;
 
     public Health health;
 
@@ -21,12 +22,14 @@ public class UnitBase : UnitRoot
     {
         base.OnInit();
 
-        health.SetMaxHealth(100);
+        health.SetMaxHealth(3000);
     }
 
     protected override void EditorOnValidate()
     {
         base.EditorOnValidate();
+
+        colliders = this.GetComponentsInChildren<Collider>();
         health = this.GetComponent<Health>();
     }   
 }

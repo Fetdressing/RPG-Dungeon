@@ -12,10 +12,14 @@ public class UnitMoving : UnitBase
 
     private Target currTarget;
 
+
+    Vector3 myPos;
+    Vector3 targetPos;
+    Vector3 targetDir;
+
     private void Attack()
     {
-        int damage = weapon.GetDamageRoll();
-        currTarget.UnitBase.health.Attack(damage, this);
+        weapon.Attack(currTarget.UnitBase, this);
     }
 
     protected override void OnInit()
@@ -32,8 +36,16 @@ public class UnitMoving : UnitBase
             return;
         }
 
+        
+
         if (currTarget != null && currTarget.Alive)
         {
+            myPos = new Vector3(transform.position.x, 0, transform.position.z);
+            targetPos = new Vector3(currTarget.Position.x, 0, currTarget.Position.z);
+            targetDir = (targetPos - myPos).normalized;
+
+            this.transform.forward = targetDir;
+
             bool withinRange = IsWithinAttackRange();
 
             if (withinRange)
@@ -48,6 +60,7 @@ public class UnitMoving : UnitBase
             else
             {
                 // Go chase!
+                this.transform.Translate(this.transform.forward * 10 * Time.deltaTime);
             }            
         }
         else
@@ -58,10 +71,7 @@ public class UnitMoving : UnitBase
 
     private bool IsWithinAttackRange()
     {
-        Vector2 myPos = new Vector2(transform.position.x, transform.position.z);
-        Vector2 targetPos = new Vector2(currTarget.Position.x, currTarget.Position.z);
-
-        if (Vector2.Distance(myPos, targetPos) < weapon.baseStats.attackRange)
+        if (Vector3.Distance(myPos, targetPos) < weapon.baseStats.attackRange)
         {
             return true;
         }
@@ -163,7 +173,7 @@ public class UnitMoving : UnitBase
             float distance = Vector2.Distance(myPos, targetPos);
 
             threat = 0;
-            threat += distance / maxDistanceFactor;
+            threat += (maxDistanceFactor - distance) / maxDistanceFactor;
         }
     }
     #endregion
