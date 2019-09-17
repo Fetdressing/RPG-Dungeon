@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 1463222823795934984}
   - component: {fileID: 5080336982265142478}
   - component: {fileID: 7553619724939293323}
-  - component: {fileID: 4070922307985141352}
   - component: {fileID: 3591356025953998119}
-  - component: {fileID: 6106329876768523724}
-  m_Layer: 0
+  - component: {fileID: 924493903486554611}
+  - component: {fileID: 4070922307985141352}
+  m_Layer: 10
   m_Name: NormalArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7215886273559007430}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -1.4110177, z: -7.65}
+  m_LocalPosition: {x: 4.6, y: -1.4110177, z: -7.65}
   m_LocalScale: {x: 0.07249025, y: 0.07249025, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -95,22 +95,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3, y: 3, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4070922307985141352
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7215886273559007430}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb7bdade2c8629e4ea80ab46a769d05a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shootSpeed: 25
-  colliders:
-  - {fileID: 7553619724939293323}
-  rbody: {fileID: 3591356025953998119}
 --- !u!54 &3591356025953998119
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -127,7 +111,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!96 &6106329876768523724
+--- !u!96 &924493903486554611
 TrailRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
@@ -136,7 +120,7 @@ TrailRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7215886273559007430}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
@@ -145,7 +129,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -166,10 +150,10 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.2
+  m_Time: 1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 0.2
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -217,9 +201,26 @@ TrailRenderer:
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
-    textureMode: 0
+    textureMode: 1
     shadowBias: 0.5
     generateLightingData: 0
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
+--- !u!114 &4070922307985141352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7215886273559007430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb7bdade2c8629e4ea80ab46a769d05a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shootSpeed: 32
+  shootSpeedRange: 4
+  colliders:
+  - {fileID: 7553619724939293323}
+  rbody: {fileID: 3591356025953998119}

@@ -16,6 +16,6 @@ public class WeaponRanged : WeaponBase
         WeaponProjectile weaponProjectile = Instantiate(projectilePrefab.gameObject).GetComponent<WeaponProjectile>();
         weaponProjectile.transform.position = this.transform.position;
 
-        weaponProjectile.Set(damage, hitRateRange, target, attacker);
+        weaponProjectile.Set(damage, baseStats.forceValue, hitRateRange, target, attacker);
     }
 }

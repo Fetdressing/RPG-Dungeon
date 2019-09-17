@@ -31,7 +31,7 @@ public class UnitUIDisplay : UnitChild
     {
         if (textNormalPrefab == null)
         {
-            textNormalPrefab = Resources.Load<DisplayText>("HitText/HitTextNormal");
+            textNormalPrefab = Resources.Load<DisplayText>("HitEffect/HitText/HitTextNormal");
         }
 
         GameObject textObj = Instantiate(textNormalPrefab.gameObject);

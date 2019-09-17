@@ -4,20 +4,23 @@ using UnityEngine;
 
 public class WeaponProjectile : MonoBehaviour
 {
-    public float shootSpeed;
+    public float shootSpeed = 20;
+    public float shootSpeedRange = 1;
 
     public Collider[] colliders;
     private int damage;
+    private float forceValue; // How hard the hit is (weapon stat).
     private UnitBase attacker;
 
     [HideInInspector]
     [SerializeField]
     private Rigidbody rbody;
 
-    public void Set(int damage, float hitRateRange, UnitBase target, UnitBase attacker)
+    public void Set(int damage, float forceValue, float hitRateRange, UnitBase target, UnitBase attacker)
     {
         this.damage = damage;
         this.attacker = attacker;
+        this.forceValue = forceValue;
 
         Vector3 dir = target.transform.position - attacker.transform.position;
         dir = new Vector3(dir.x, 0, dir.z).normalized;
@@ -26,7 +29,7 @@ public class WeaponProjectile : MonoBehaviour
         dir = Quaternion.Euler(0, randomHitDir, 0) * dir;
 
         this.transform.forward = dir;
-        this.rbody.velocity = dir * shootSpeed;
+        this.rbody.velocity = dir * (shootSpeed + Random.Range(0, shootSpeedRange));
         
         // Ignore collision versus caster.
         for (int i = 0; i < attacker.colliders.Length; i++)
@@ -46,7 +49,7 @@ public class WeaponProjectile : MonoBehaviour
 
         if (unitBase != null)
         {
-            unitBase.health.Attack(damage, attacker);
+            unitBase.health.Attack(damage, forceValue, attacker);
             Destroy(this.gameObject);
         }
     }

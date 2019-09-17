@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class UnitEffects : UnitChild
 {
-    private IEnumerator currIE = null;
+    private IEnumerator animationIE = null;
+    private IEnumerator materialIE = null;
+
+    [Header("Animation")]
 
     [SerializeField]
     private AnimationCurve pokeCurve;
@@ -19,20 +22,37 @@ public class UnitEffects : UnitChild
 
     private Quaternion effectObjectLocalStartRot;
 
+    [Header("Materials")]
+
+    private static Material hitMaterial;
+
+    [HideInInspector]
+    [SerializeField]
+    private RenderComp[] renderComps;
+
     public void DisplayHit(Vector3 dir, float norForce)
     {
-        if (currIE != null || !alive)
+        if (!alive)
         {
             return;
         }
 
-        effectObject.transform.localPosition = effectObjectLocalStartPos;
-        effectObject.transform.localRotation = effectObjectLocalStartRot;
+        if (animationIE == null)
+        {
+            effectObject.transform.localPosition = effectObjectLocalStartPos;
+            effectObject.transform.localRotation = effectObjectLocalStartRot;
 
-        dir = new Vector3(dir.x, 0, dir.z);
+            dir = new Vector3(dir.x, 0, dir.z);
 
-        currIE = PokeAwayIE(dir, norForce);
-        StartCoroutine(currIE);
+            animationIE = PokeAwayIE(dir, norForce);
+            StartCoroutine(animationIE);
+        }
+
+        if (materialIE == null)
+        {
+            materialIE = PlayHitMat();
+            StartCoroutine(materialIE);
+        }
     }
 
     public override void OnDeath(UnitBase killer)
@@ -63,7 +83,7 @@ public class UnitEffects : UnitChild
             yield return new WaitForEndOfFrame();
         }
 
-        currIE = null;
+        animationIE = null;
     }
 
     private IEnumerator PokeAwayIE(Vector3 dir, float norForce)
@@ -79,8 +99,6 @@ public class UnitEffects : UnitChild
             float currVal = pokeCurve.Evaluate(accumTime / effectTime);
             effectObject.RotateAround(effectObject.transform.position, turnAroundVec, currVal * 10);
 
-            //effectObject.transform.localRotation = effectObjectLocalStartRot + 
-
             effectObject.transform.localPosition = effectObjectLocalStartPos + (dir * currVal * norForce * baseForce);
 
             accumTime += Time.deltaTime;
@@ -89,14 +107,67 @@ public class UnitEffects : UnitChild
 
         effectObject.transform.localPosition = effectObjectLocalStartPos;
         effectObject.transform.localRotation = effectObjectLocalStartRot;
-        currIE = null;
+        animationIE = null;
+    }
+
+    private IEnumerator PlayHitMat()
+    {
+        for (int i = 0; i < renderComps.Length; i++)
+        {
+            renderComps[i].SetMaterial(hitMaterial);
+        }
+
+        yield return new WaitForSeconds(0.3f);
+
+        for (int i = 0; i < renderComps.Length; i++)
+        {
+            renderComps[i].Reset();
+        }
+
+        materialIE = null;
     }
 
     protected override void OnInit()
     {
         base.OnInit();
 
+        if (hitMaterial == null)
+        {
+            hitMaterial = Resources.Load<Material>("HitEffect/HitMaterial");
+        }
+
         effectObjectLocalStartPos = effectObject.localPosition;
         effectObjectLocalStartRot = effectObject.localRotation;
+    }
+
+    protected override void EditorOnValidate()
+    {
+        base.EditorOnValidate();
+
+        Renderer[] renderers = this.GetComponentsInChildren<Renderer>();
+        renderComps = new RenderComp[renderers.Length];
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            renderComps[i] = new RenderComp();
+            renderComps[i].renderer = renderers[i];
+            renderComps[i].startMaterial = renderers[i].sharedMaterial;
+        }
+    }
+
+    private class RenderComp
+    {
+        public Renderer renderer;
+        public Material startMaterial;
+
+        public void SetMaterial(Material material)
+        {
+            renderer.material = material;
+        }
+
+        public void Reset()
+        {
+            renderer.material = startMaterial;
+        }
     }
 }

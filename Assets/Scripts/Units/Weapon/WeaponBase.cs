@@ -10,7 +10,7 @@ public class WeaponBase : MonoBehaviour
     public virtual void Attack(UnitBase unit, UnitBase attacker)
     {
         int damage = GetDamageRoll();
-        unit.health.Attack(damage, attacker);
+        unit.health.Attack(damage, baseStats.forceValue, attacker);
     }
 
     protected int GetDamageRoll()

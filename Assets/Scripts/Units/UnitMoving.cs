@@ -13,9 +13,40 @@ public class UnitMoving : UnitBase
     private Target currTarget;
 
 
+    private float baseMoveSpeed = 35f;
+    private float maxMoveSpeed = 15f;
+    private float moveSpeedExternalForceMult = 1;
+    private float timerExternalForceWearOff = 0;
+
     Vector3 myPos;
     Vector3 targetPos;
     Vector3 targetDir;
+
+    public override void SetVelocityExternal(Vector3 velocity)
+    {
+        base.SetVelocityExternal(velocity);
+
+        const float maxVelReduce = 65;
+        float reduceForce = System.Math.Min(velocity.magnitude / maxVelReduce, 1);
+
+        timerExternalForceWearOff = Time.time + (reduceForce * 0.5f);
+
+        moveSpeedExternalForceMult = moveSpeedExternalForceMult - reduceForce;
+        moveSpeedExternalForceMult = System.Math.Max(moveSpeedExternalForceMult, 0);
+    }
+
+    public override void AddVelocityExternal(Vector3 velocity)
+    {
+        base.AddVelocityExternal(velocity);
+
+        const float maxVelReduce = 65;
+        float reduceForce = System.Math.Min(velocity.magnitude / maxVelReduce, 1);
+
+        timerExternalForceWearOff = Time.time + (reduceForce * 0.5f);
+
+        moveSpeedExternalForceMult = moveSpeedExternalForceMult - reduceForce;
+        moveSpeedExternalForceMult = System.Math.Max(moveSpeedExternalForceMult, 0);
+    }
 
     private void Attack()
     {
@@ -36,19 +67,23 @@ public class UnitMoving : UnitBase
             return;
         }
 
-        
+        float storedYVel = rBody.velocity.y; // Store Y-velocity to not change it in the update.
+        rBody.velocity = new Vector3(this.rBody.velocity.x, 0, this.rBody.velocity.z);
+
+        // Always lerp back the external mult. If we were hit by external force then we want to bring controll back to self again.
+        moveSpeedExternalForceMult += Time.deltaTime * 0.28f;
+        moveSpeedExternalForceMult = System.Math.Min(moveSpeedExternalForceMult, 1);
 
         if (currTarget != null && currTarget.Alive)
         {
             myPos = new Vector3(transform.position.x, 0, transform.position.z);
             targetPos = new Vector3(currTarget.Position.x, 0, currTarget.Position.z);
             targetDir = (targetPos - myPos).normalized;
+            float targetDistance = Vector3.Distance(myPos, targetPos);
 
             this.transform.forward = targetDir;
-
-            bool withinRange = IsWithinAttackRange();
-
-            if (withinRange)
+            
+            if (IsWithinAttackRange(targetDistance))
             {
                 if (Time.time > nextAttackReady)
                 {
@@ -57,21 +92,46 @@ public class UnitMoving : UnitBase
                     Attack();
                 }
             }
-            else
+            
+            if (!IsWithinPreferredAttackRange(targetDistance))
             {
                 // Go chase!
-                this.transform.Translate(this.transform.forward * 10 * Time.deltaTime);
-            }            
+                Vector3 newVelocity = this.rBody.velocity + (this.transform.forward * baseMoveSpeed * moveSpeedExternalForceMult * Time.deltaTime);
+
+                if (newVelocity.sqrMagnitude < this.rBody.velocity.sqrMagnitude || newVelocity.magnitude < maxMoveSpeed)
+                {
+                    this.rBody.velocity = newVelocity;
+                }
+            }
+            else
+            {
+                if (timerExternalForceWearOff < Time.time)
+                {
+                    this.rBody.velocity = this.rBody.velocity * 0.75f; // Slow down velocity.
+                }
+            }
         }
         else
         {
             currTarget = GetBestTarget();
         }
+
+        this.rBody.velocity = new Vector3(this.rBody.velocity.x, storedYVel, this.rBody.velocity.z);
     }
 
-    private bool IsWithinAttackRange()
+    private bool IsWithinAttackRange(float targetDistance)
     {
-        if (Vector3.Distance(myPos, targetPos) < weapon.baseStats.attackRange)
+        if (targetDistance < weapon.baseStats.attackRange)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool IsWithinPreferredAttackRange(float targetDistance)
+    {
+        if (targetDistance < (weapon.baseStats.attackRange * weapon.baseStats.attackRangePreferredNor))
         {
             return true;
         }

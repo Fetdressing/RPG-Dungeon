@@ -25,7 +25,7 @@ public class Health : UnitChild
         this.currHealth = maxHealth;
     }
 
-    public void Attack(int damage, UnitBase attacker)
+    public void Attack(int damage, float forceValue, UnitBase attacker)
     {
         // Calculate whether it missed or not.
 
@@ -34,7 +34,7 @@ public class Health : UnitChild
         int minMaxFontDiff = maxDamageFontSize - minDamageFontSize;
 
         const int deathFontSize = 8;
-        float damageSize = ((float)damage / maxHealth); // How big the damage was for this unit.
+        float damageSize = System.Math.Max(((float)damage / maxHealth), 0.08f); // How big the damage was for this unit.
 
         int fontSize = minDamageFontSize + ((int)(damageSize * minMaxFontDiff));
 
@@ -49,8 +49,18 @@ public class Health : UnitChild
         }
         else
         {
+            Vector3 attackDir = (this.transform.position - attacker.transform.position).normalized;
+
             unitUIDisplay.DisplayHitText(damage.ToString(), fontSize);
-            unitEffects.DisplayHit((this.transform.position - attacker.transform.position).normalized, damageSize);
+
+            if (damage > 0)
+            {
+                unitEffects.DisplayHit(attackDir, damageSize);
+
+                // Apply velocity depending on weapon force value and the damage size.
+                unitBase.AddVelocityExternal((attackDir * damageSize * 350) * forceValue);
+                unitBase.AddVelocityExternal(Vector3.up * damageSize * 110 * forceValue);
+            }
         }
     }
 
