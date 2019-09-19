@@ -1933,6 +1933,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   effectObject: {fileID: 9065350710037074307}
+  bloodParticleSystemPrefabs:
+  - {fileID: 5230353404562786820, guid: 6a31b1164d89f0341a03249c10780ad0, type: 3}
 --- !u!114 &3428174175763259597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2075,6 +2077,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4646602814272895304, guid: cbbec5fa024f2974e87c8f0e0f5676d4,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 367785945}
+    - target: {fileID: 2403871159859637861, guid: cbbec5fa024f2974e87c8f0e0f5676d4,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 382846268}
     - target: {fileID: 4646602814272895302, guid: cbbec5fa024f2974e87c8f0e0f5676d4,
         type: 3}
       propertyPath: baseStats.attackspeed
@@ -2090,16 +2102,6 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1561611260}
-    - target: {fileID: 4646602814272895304, guid: cbbec5fa024f2974e87c8f0e0f5676d4,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 367785945}
-    - target: {fileID: 2403871159859637861, guid: cbbec5fa024f2974e87c8f0e0f5676d4,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 382846268}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cbbec5fa024f2974e87c8f0e0f5676d4, type: 3}
 --- !u!1 &5680230182947867408

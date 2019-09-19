@@ -6,7 +6,7 @@ using UnityEngine;
 public class Stats : MonoBehaviour
 {
     [System.Serializable]
-    public class Main
+    public struct Primary
     {
         public int strength;
 
@@ -15,14 +15,35 @@ public class Stats : MonoBehaviour
         public int spirit;
     }
 
+    // Calculates secondary attributes from primary.
+    public static Secondary CalculateSecondary(Primary primary)
+    {
+        Secondary secondary;
+
+        secondary.moveSpeed = (int)(primary.speed * 0.1f);
+        secondary.health = (int)(primary.strength * 10f);
+        secondary.healthReg = (int)(primary.strength * 0.1f);
+        secondary.attackspeedMult = (int)(primary.speed * 0.1f);
+
+        return secondary;
+    }
+
     [System.Serializable]
-    public class Secondary
+    public struct Secondary
     {
         public int moveSpeed;
 
         public int health;
 
         public int healthReg;
+
+        public float attackspeedMult;
+    }
+
+    // Attributes that are not affected by the primary attributes.
+    public struct Unaffected
+    {
+        public float lifesteal;
     }
 
     [System.Serializable]
@@ -41,15 +62,5 @@ public class Stats : MonoBehaviour
 
         [Range(0, 1)]
         public float forceValue; // Value between 0 and 1. How strong the weapon hits.
-    }
-
-    [System.Serializable]
-    public class Extra
-    {
-        public float attackspeedMult;
-
-        public float lifesteal;
-
-
     }
 }

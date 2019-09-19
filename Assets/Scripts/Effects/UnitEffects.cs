@@ -30,12 +30,31 @@ public class UnitEffects : UnitChild
     [SerializeField]
     private RenderComp[] renderComps;
 
+    [Header("Particle Systems")]
+
+    [SerializeField]
+    private ParticleSystem[] bloodParticleSystemPrefabs;
+
+    private void PlayBloodEffect(float normalizedForce)
+    {
+        if (bloodParticleSystemPrefabs != null && bloodParticleSystemPrefabs.Length > 0)
+        {
+            int nearestIndex = Mathf.FloorToInt(normalizedForce * (float)bloodParticleSystemPrefabs.Length);
+            ParticleSystem spawnParticleSystem = Instantiate(bloodParticleSystemPrefabs[nearestIndex].gameObject).GetComponent<ParticleSystem>();
+            spawnParticleSystem.transform.position = this.transform.position;
+            Destroy(spawnParticleSystem.gameObject, 2f);
+        }
+    }
+
     public void DisplayHit(Vector3 dir, float norForce)
     {
         if (!alive)
         {
             return;
         }
+
+        // Play blood effect.
+        PlayBloodEffect(norForce);
 
         if (animationIE == null)
         {
@@ -88,6 +107,8 @@ public class UnitEffects : UnitChild
 
     private IEnumerator PokeAwayIE(Vector3 dir, float norForce)
     {
+        norForce = System.Math.Max(norForce, 0.08f); // Make it have a minimum value.
+
         const float baseForce = 1.7f;
         float effectTime = 0.8f * norForce;
         float accumTime = 0f;

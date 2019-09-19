@@ -34,7 +34,7 @@ public class Health : UnitChild
         int minMaxFontDiff = maxDamageFontSize - minDamageFontSize;
 
         const int deathFontSize = 8;
-        float damageSize = System.Math.Max(((float)damage / maxHealth), 0.08f); // How big the damage was for this unit.
+        float damageSize = (float)damage / maxHealth; // How big the damage was for this unit.
 
         int fontSize = minDamageFontSize + ((int)(damageSize * minMaxFontDiff));
 

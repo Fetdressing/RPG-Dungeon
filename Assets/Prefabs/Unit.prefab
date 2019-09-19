@@ -379,6 +379,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   effectObject: {fileID: 8315526817816727491}
+  bloodParticleSystemPrefabs:
+  - {fileID: 6809799597276771695, guid: 46f17b3a0ce3b1549b121d36ce955258, type: 3}
+  - {fileID: 5230353404562786820, guid: 6a31b1164d89f0341a03249c10780ad0, type: 3}
 --- !u!114 &2394619615778078349
 MonoBehaviour:
   m_ObjectHideFlags: 0
