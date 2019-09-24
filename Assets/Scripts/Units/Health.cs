@@ -7,25 +7,43 @@ using UnityEngine;
 public class Health : UnitChild
 {
     [HideInInspector]
-    public UnitBase unitBase;
-
-    [HideInInspector]
     public UnitUIDisplay unitUIDisplay;
 
     [HideInInspector]
     public UnitEffects unitEffects;
 
+    [SerializeField]
     private int maxHealth;
 
-    private int currHealth;
+    private int currHealth = -1;
 
-    public void SetMaxHealth(int maxHealth)
+    private int healthReg;
+    private float nextHealthRegTick = 0.0f;
+    private const float healthRegTickRate = 0.5f;
+
+    public void SetMaxHealth(int maxHealth, bool keepCurrHealth = false)
     {
+        if (currHealth < 0)
+        {
+            keepCurrHealth = false;
+        }
+
+        float currHealthNor = (float)currHealth / maxHealth;
+
         this.maxHealth = maxHealth;
-        this.currHealth = maxHealth;
+
+        if (keepCurrHealth)
+        {
+            float newCurrHealth = (float)this.maxHealth * currHealthNor;
+            this.currHealth = (int)newCurrHealth;
+        }
+        else
+        {
+            this.currHealth = maxHealth;
+        }
     }
 
-    public void Attack(int damage, float forceValue, UnitBase attacker)
+    public void Attack(int damage, float forceValue, UnitRoot attacker)
     {
         // Calculate whether it missed or not.
 
@@ -58,15 +76,20 @@ public class Health : UnitChild
                 unitEffects.DisplayHit(attackDir, damageSize);
 
                 // Apply velocity depending on weapon force value and the damage size.
-                unitBase.AddVelocityExternal((attackDir * damageSize * 350) * forceValue);
-                unitBase.AddVelocityExternal(Vector3.up * damageSize * 110 * forceValue);
+                unitRoot.AddVelocityExternal((attackDir * damageSize * 350) * forceValue);
+                unitRoot.AddVelocityExternal(Vector3.up * damageSize * 110 * forceValue);
             }
         }
     }
 
-    private void Die(UnitBase killer)
+    public void Heal(int heal, UnitRoot healer)
     {
-        unitBase.SignalDeath(killer);
+        currHealth = System.Math.Min(maxHealth, currHealth - heal);
+    }
+
+    private void Die(UnitRoot killer)
+    {
+        unitRoot.SignalDeath(killer);
         Destroy(this.gameObject, 2f);
     }
 
@@ -74,8 +97,33 @@ public class Health : UnitChild
     {
         base.EditorOnValidate();
 
-        unitBase = this.GetComponent<UnitBase>();
+        unitRoot = this.GetComponent<UnitRoot>();
         unitUIDisplay = this.GetComponent<UnitUIDisplay>();
         unitEffects = this.GetComponent<UnitEffects>();
+    }
+
+    protected override void OnInit()
+    {
+        base.OnInit();
+
+        nextHealthRegTick = Time.time;
+    }
+
+    protected override void OnStatsChanged(Stats.Secondary currentStats)
+    {
+        base.OnStatsChanged(currentStats);
+
+        SetMaxHealth(currentStats.health, true);
+        this.healthReg = currentStats.healthReg;
+    }
+
+    private void Update()
+    {
+        if (Time.time > nextHealthRegTick)
+        {
+            // Add health reg.
+            Heal(healthReg, this.unitRoot);
+            nextHealthRegTick = Time.time + healthRegTickRate;
+        }
     }
 }

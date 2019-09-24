@@ -26,14 +26,14 @@ public class UnitManager : MonoBehaviour
             instance = this;
         }
 
-        UnitBase[] unitBases = FindObjectsOfType<UnitBase>();
-        List<UnitBase> unitBaseList = new List<UnitBase>();
+        UnitRoot[] unitBases = FindObjectsOfType<UnitRoot>();
+        List<UnitRoot> unitRootList = new List<UnitRoot>();
 
         for (int i = 0; i < unitBases.Length; i++)
         {
-            unitBaseList.Add(unitBases[i]);
+            unitRootList.Add(unitBases[i]);
         }
 
-        UnitBase.allActiveUnits = unitBaseList;
+        UnitRoot.allActiveUnits = unitRootList;
     }
 }

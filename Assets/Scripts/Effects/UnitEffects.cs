@@ -74,7 +74,7 @@ public class UnitEffects : UnitChild
         }
     }
 
-    public override void OnDeath(UnitBase killer)
+    public override void OnDeath(UnitRoot killer)
     {
         base.OnDeath(killer);
 

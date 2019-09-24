@@ -20,7 +20,7 @@ public class UnitUIDisplay : UnitChild
     private static Transform lookCameraTransform;
     private Vector3 vecToCamera;
 
-    public override void OnDeath(UnitBase killer)
+    public override void OnDeath(UnitRoot killer)
     {
         base.OnDeath(killer);
 

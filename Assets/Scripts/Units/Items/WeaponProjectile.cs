@@ -10,13 +10,13 @@ public class WeaponProjectile : MonoBehaviour
     public Collider[] colliders;
     private int damage;
     private float forceValue; // How hard the hit is (weapon stat).
-    private UnitBase attacker;
+    private UnitRoot attacker;
 
     [HideInInspector]
     [SerializeField]
     private Rigidbody rbody;
 
-    public void Set(int damage, float forceValue, float hitRateRange, UnitBase target, UnitBase attacker)
+    public void Set(int damage, float forceValue, float hitRateRange, UnitRoot target, UnitRoot attacker)
     {
         this.damage = damage;
         this.attacker = attacker;
@@ -45,11 +45,11 @@ public class WeaponProjectile : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        UnitBase unitBase = other.GetComponent<UnitBase>();
+        UnitRoot unitRoot = other.GetComponent<UnitRoot>();
 
-        if (unitBase != null)
+        if (unitRoot != null)
         {
-            unitBase.health.Attack(damage, forceValue, attacker);
+            unitRoot.health.Attack(damage, forceValue, attacker);
             Destroy(this.gameObject);
         }
     }

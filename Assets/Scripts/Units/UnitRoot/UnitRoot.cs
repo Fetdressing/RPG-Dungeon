@@ -2,10 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(UnitStatHandler))]
 // Root class for all unit related root objects.
-public abstract class UnitRoot : UnitChild
+public class UnitRoot : UnitChild
 {
+    public static List<UnitRoot> allActiveUnits = new List<UnitRoot>();
+
     public Team team;
+
+    [HideInInspector]
+    public Collider[] colliders;
+
+    [HideInInspector]
+    public UnitStatHandler statHandler;
+
+    [HideInInspector]
+    public Health health;
 
     public enum Team
     {
@@ -18,7 +31,27 @@ public abstract class UnitRoot : UnitChild
     [SerializeField]
     private UnitChild[] myChildren;
 
-    public void SignalDeath(UnitBase killer)
+    [SerializeField]
+    protected Rigidbody rBody;
+
+    public virtual void SetVelocityExternal(Vector3 velocity)
+    {
+        this.rBody.velocity = velocity;
+    }
+
+    public virtual void AddVelocityExternal(Vector3 velocity)
+    {
+        this.rBody.velocity += velocity;
+    }
+
+    public override void OnDeath(UnitRoot killer)
+    {
+        base.OnDeath(killer);
+
+        allActiveUnits.Remove(this);
+    }
+
+    public void SignalDeath(UnitRoot killer)
     {
         if (!alive)
         {
@@ -36,6 +69,21 @@ public abstract class UnitRoot : UnitChild
     protected override void EditorOnValidate()
     {
         base.EditorOnValidate();
+
+        rBody = this.GetComponent<Rigidbody>();
+        colliders = this.GetComponentsInChildren<Collider>();
+        health = this.GetComponent<Health>();
         myChildren = this.gameObject.GetComponents<UnitChild>();
+        statHandler = this.gameObject.GetComponent<UnitStatHandler>();
+    }
+
+    private void Awake()
+    {
+        statHandler.Init(this); // Initialize first because other scripts might need access to it.
+
+        for (int i = 0; i < myChildren.Length; i++)
+        {
+            myChildren[i].Init(this);
+        }
     }
 }

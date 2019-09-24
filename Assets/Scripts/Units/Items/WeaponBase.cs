@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponBase : MonoBehaviour
+public class WeaponBase : ItemBase
 {
     [SerializeField]
     public Stats.Weapon baseStats;
 
-    public virtual void Attack(UnitBase unit, UnitBase attacker)
+    public virtual void Attack(UnitRoot unit, UnitRoot attacker)
     {
         int damage = GetDamageRoll();
         unit.health.Attack(damage, baseStats.forceValue, attacker);

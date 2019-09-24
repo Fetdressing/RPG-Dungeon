@@ -7,9 +7,11 @@ public class UnitChild : MonoBehaviour
     [System.NonSerialized]
     public bool alive = true;
 
+
+    protected UnitRoot unitRoot;
     private bool isInit = false;
 
-    public virtual void OnDeath(UnitBase killer)
+    public virtual void OnDeath(UnitRoot killer)
     {
         alive = false;
     }
@@ -19,22 +21,25 @@ public class UnitChild : MonoBehaviour
 
     }
 
+    protected virtual void OnStatsChanged(Stats.Secondary currentStats)
+    {
+
+    }
+
     protected virtual void EditorOnValidate()
     {
 
     }
 
-    private void Awake()
-    {
-        Init();
-    }
-
-    private void Init()
+    public void Init(UnitRoot unitRoot)
     {
         if (isInit)
         {
             return;
         }
+
+        this.unitRoot = unitRoot;
+        this.unitRoot.statHandler.RegisterOnStatsChanged(OnStatsChanged);
 
         isInit = true;
 

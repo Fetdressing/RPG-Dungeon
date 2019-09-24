@@ -1948,14 +1948,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   team: 0
+  colliders:
+  - {fileID: 5680230183460087126}
+  statHandler: {fileID: 5680230183460087128}
+  health: {fileID: 5680230183460087130}
   myChildren:
+  - {fileID: 3428174175763259597}
   - {fileID: 5680230183460087124}
   - {fileID: 5680230183460087130}
   - {fileID: 1068191919226702303}
-  - {fileID: 3428174175763259597}
-  colliders:
-  - {fileID: 5680230183460087126}
-  health: {fileID: 5680230183460087130}
+  - {fileID: 5680230183460087128}
   rBody: {fileID: 5680230183460087127}
   weapon: {fileID: 1707267007}
 --- !u!23 &3455514292975464485
@@ -2262,11 +2264,12 @@ GameObject:
   m_Component:
   - component: {fileID: 5680230183460087131}
   - component: {fileID: 5680230183460087126}
+  - component: {fileID: 3428174175763259597}
   - component: {fileID: 5680230183460087124}
   - component: {fileID: 5680230183460087130}
   - component: {fileID: 1068191919226702303}
-  - component: {fileID: 3428174175763259597}
   - component: {fileID: 5680230183460087127}
+  - component: {fileID: 5680230183460087128}
   m_Layer: 0
   m_Name: Unit (2)
   m_TagString: Untagged
@@ -2304,6 +2307,31 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5680230183460087128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5680230183460087125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a086d76f83acf84a8c6a518e4e4a802, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startStats:
+    primary:
+      strength: 5
+      speed: 5
+      spirit: 5
+    secondary:
+      moveSpeed: 0
+      health: 0
+      healthReg: 0
+      meleeDamage: 0
+      rangedDamage: 0
+      attackspeedMult: 0
+      lifesteal: 0
 --- !u!114 &5680230183460087130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2316,7 +2344,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bcdce07bcddc904a8dddd1930c56dff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitBase: {fileID: 3428174175763259597}
   unitUIDisplay: {fileID: 5680230183460087124}
   unitEffects: {fileID: 1068191919226702303}
 --- !u!4 &5680230183460087131

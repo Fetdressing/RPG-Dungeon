@@ -9,7 +9,7 @@ public class WeaponRanged : WeaponBase
 
     public float hitRateRange = 3; // How many degrees that the aim can vary.
 
-    public override void Attack(UnitBase target, UnitBase attacker)
+    public override void Attack(UnitRoot target, UnitRoot attacker)
     {
         int damage = GetDamageRoll();
 

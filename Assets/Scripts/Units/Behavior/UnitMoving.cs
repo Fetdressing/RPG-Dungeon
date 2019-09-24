@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitMoving : UnitBase
+[RequireComponent(typeof(Rigidbody))]
+public class UnitMoving : UnitRoot
 {
     public WeaponBase weapon;
 
@@ -187,14 +188,14 @@ public class UnitMoving : UnitBase
 
     private class Target
     {
-        private UnitBase target;
-        private UnitBase owner;
+        private UnitRoot target;
+        private UnitRoot owner;
 
         private float maxDistanceFactor = 100;
 
         public float threat;
 
-        public Target(UnitBase target, UnitBase owner)
+        public Target(UnitRoot target, UnitRoot owner)
         {
             this.target = target;
             this.owner = owner;
@@ -217,7 +218,7 @@ public class UnitMoving : UnitBase
             }
         }
 
-        public UnitBase UnitBase
+        public UnitRoot UnitBase
         {
             get
             {

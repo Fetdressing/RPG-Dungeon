@@ -136,6 +136,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce8a9f80c1c589c48ab0ffc20b20b88f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemStats:
+    primary:
+      strength: 0
+      speed: 0
+      spirit: 0
+    secondary:
+      moveSpeed: 0
+      health: 0
+      healthReg: 0
+      attackspeedMult: 0
+    unaffected:
+      lifesteal: 0
   baseStats:
     damage: 5
     damageRange: 2
@@ -228,10 +240,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4646602814653217563}
   - component: {fileID: 4646602814653217558}
+  - component: {fileID: 2394619615778078349}
+  - component: {fileID: 3394690489057469477}
   - component: {fileID: 4646602814653217556}
   - component: {fileID: 4646602814653217562}
   - component: {fileID: 34565353708738463}
-  - component: {fileID: 2394619615778078349}
   - component: {fileID: 2503448104845570078}
   m_Layer: 0
   m_Name: Unit
@@ -271,6 +284,55 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2394619615778078349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4646602814653217557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87bd898fad30ee64392f094e83af0998, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  team: 0
+  colliders:
+  - {fileID: 4646602814653217558}
+  - {fileID: 4646602814272895305}
+  health: {fileID: 4646602814653217562}
+  myChildren:
+  - {fileID: 2394619615778078349}
+  - {fileID: 3394690489057469477}
+  - {fileID: 4646602814653217556}
+  - {fileID: 4646602814653217562}
+  - {fileID: 34565353708738463}
+  rBody: {fileID: 2503448104845570078}
+  weapon: {fileID: 4646602814272895302}
+--- !u!114 &3394690489057469477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4646602814653217557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a086d76f83acf84a8c6a518e4e4a802, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startStats:
+    primary:
+      strength: 10
+      speed: 6
+      spirit: 12
+    secondary:
+      moveSpeed: 15
+      health: 150
+      healthReg: 5
+      attackspeedMult: 0
+    unaffected:
+      lifesteal: 0
 --- !u!114 &4646602814653217556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,7 +359,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bcdce07bcddc904a8dddd1930c56dff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitBase: {fileID: 2394619615778078349}
   unitUIDisplay: {fileID: 4646602814653217556}
   unitEffects: {fileID: 34565353708738463}
 --- !u!114 &34565353708738463
@@ -382,30 +443,6 @@ MonoBehaviour:
   bloodParticleSystemPrefabs:
   - {fileID: 6809799597276771695, guid: 46f17b3a0ce3b1549b121d36ce955258, type: 3}
   - {fileID: 5230353404562786820, guid: 6a31b1164d89f0341a03249c10780ad0, type: 3}
---- !u!114 &2394619615778078349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4646602814653217557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87bd898fad30ee64392f094e83af0998, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  team: 0
-  myChildren:
-  - {fileID: 4646602814653217556}
-  - {fileID: 4646602814653217562}
-  - {fileID: 34565353708738463}
-  - {fileID: 2394619615778078349}
-  colliders:
-  - {fileID: 4646602814653217558}
-  - {fileID: 4646602814272895305}
-  health: {fileID: 4646602814653217562}
-  rBody: {fileID: 2503448104845570078}
-  weapon: {fileID: 4646602814272895302}
 --- !u!54 &2503448104845570078
 Rigidbody:
   m_ObjectHideFlags: 0
